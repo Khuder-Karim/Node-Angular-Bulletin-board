@@ -1,0 +1,28 @@
+{
+    "port": 3000,
+    "mongoose": {
+    	"uri": "mongodb://karim:sonykarim@ds011168.mlab.com:11168/course",
+ 
+    	"options": {
+        	"server": {
+         		"socketOptions": {
+            		"keepAlive": 1
+        		}
+       		}
+     	}
+    },
+    "session": {
+    	"secret": "MyCourse",
+    	"key": "sid",
+    	"cookie": {
+        	"path": "/",
+       		"httpOnly": true,
+       		"maxAge": null
+     	}
+    },
+	"cloudinary": {
+		"cloud_name": "dgun3namb",
+		"api_key": "857987848156889",
+		"api_secret": "zg3QiIKK3OrKK8eYCOdCOeYA5Aw"
+	}
+} 

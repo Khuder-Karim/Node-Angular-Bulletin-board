@@ -1,0 +1,72 @@
+<div class="container" ng-controller="AdDetailController">
+    <div class="row">
+        <div class="col-xs-12 col-sm-9">
+            <h3>{{ad.title}}</h3>
+            <p>{{ad.created | date: 'longDate'}}</p>
+            <img ng-src="{{ad.img}}" alt="ad.title" style="max-width: 100%">
+            <hr>
+            <p style="white-space:pre-wrap">{{ad.description}}</p>
+            <hr>
+        </div>
+
+        <div class="col-xs-12 col-sm-3" style="text-align: center">
+            <h3>Продавец:</h3>
+            <p><strong>Имя: {{ad.author.username}}</strong></p>
+            <p><strong>E-mail: {{ad.author.email}}</strong></p>
+            <p><strong>Номер телефона: {{ad.author.phone}}</strong></p>
+            <h3>Цена: <span class="label label-success">{{ad.price}} Грн</span></h3>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <blockquote ng-repeat="comment in ad.comments">
+                <p>{{comment.rating}} Stars</p>
+                <p>{{comment.text}}</p>
+                <footer>{{comment.author.username}}, {{comment.created | date: 'longDate'}}</footer>
+            </blockquote>
+
+            <hr>
+
+            <form class="form-horizontal" name="commentForm"
+                  ng-submit="submitComment()" ng-controller="AdCommentController" ng-if="user" novalidate>
+                <div class="form-group" ng-class="{ 'has-error has-feedback' : commentForm.comment.$invalid && commentForm.comment.$dirty }">
+                    <label for="comment" class="col-xs-12 control-label" style="text-align: left" >Ваш коментарий</label>
+                    <div class="col-xs-12">
+                        <textarea class="form-control" id="comment" name="comment" rows="6" ng-model="comment.text" required></textarea>
+                        <span ng-show="commentForm.comment.$error.required && commentForm.comment.$dirty" class="help-block">Comment field is required</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Your rating</label>
+                    <div class="col-sm-10">
+                        <label class="radio-inline" >
+                            <input type="radio" ng-model="comment.rating" value="1">1
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" ng-model="comment.rating" value="2">2
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" ng-model="comment.rating" value="3">3
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" ng-model="comment.rating" value="4">4
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" ng-model="comment.rating" value="5">5
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary" ng-disabled="commentForm.$invalid">Коментировать</button>
+                    </div>
+                </div>
+            </form>
+
+            <h4 ng-if="!user" style="text-align: center">Войдите в аккаунт что бы оставлять коментарии</h4>
+
+        </div>
+    </div>
+</div>

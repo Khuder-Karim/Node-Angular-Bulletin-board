@@ -1,0 +1,46 @@
+<div class="container" ng-controller="AdController">
+    <form class="form-horizontal" role="form" name="AdForm">
+        <div class="form-group" ng-class="{ 'has-error' : AdForm.title.$error.required && !AdForm.title.$pristine }">
+            <label for="title" class="col-sm-2 control-label">Заголовок Обьявления</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="title" name="title" ng-model="adSchema.title" required>
+                <span ng-show="AdForm.title.$error.required && !AdForm.title.$pristine" class="help-block">Заголовок обьявления обьязатльно для заполнения</span>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error' : AdForm.description.$error.required && AdForm.description.$dirty}">
+            <label for="description" class="col-sm-2 control-label">Описание</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="description" name="description" rows="15" ng-model="adSchema.description" required> </textarea>
+                <span ng-show="AdForm.description.$error.required && AdForm.description.$dirty" class="help-block">Описание обьязательное</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="img" class="col-sm-2 control-label">Загрузите картинку</label>
+            <div class="col-sm-10">
+                <input type="file" id="img" file-model="adSchema.file">
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error' : AdForm.price.$error.required && AdForm.price.$dirty}">
+            <label for="price" class="col-sm-2 control-label">Цена</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="price" name="price" ng-model="adSchema.price" required> </input>
+                <span ng-show="AdForm.price.$error.required && AdForm.price.$dirty" class="help-block">Цена обьязательная</span>
+            </div>
+        </div>
+        <div ng-show="errorMessage">
+            <div class="col-sm-offset-2 col-sm-10">
+                <span class="help-block">{{errorMessage}}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary" ng-disabled="AdForm.$invalid" ng-click="Submit()">Опубликовать</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+

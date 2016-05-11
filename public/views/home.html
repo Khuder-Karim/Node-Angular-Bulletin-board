@@ -1,0 +1,37 @@
+<div class="container" ng-controller="AdController">
+    <div class="row">
+        <div class="searchBlock">
+            <input type="text" ng-model="findText">
+            <button class="btn-info" ng-click="find()">Поиск</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="product col-xs-12 col-sm-4" ng-repeat="ad in ads">
+            <a ui-sref="app.adDetails({id:ad._id})">
+                <img ng-if="ad.img" ng-src="{{ad.img}}" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
+                <img ng-if="!ad.img" ng-src="../images/no_photo.jpg" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
+            </a>
+            <a ui-sref="app.adDetails({id:ad._id})">
+                <h4>{{ad.title}}</h4>
+            </a>
+            <span>{{ad.created | date: 'longDate'}}</span>
+
+            <div class="row manipuleAd">
+                <h3 class="col-xs-6">
+                    <strong class="label label-success">{{ad.price}} Грн</strong>
+                </h3>
+                <h3 class="col-xs-6" style="text-align: right">
+                    <button ng-if="user && user._id==ad.author" class="btn btn-danger" ng-click="deleteAd(ad._id)">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </button>
+                    <button ng-if="user && !isSubscription(ad._id) && user._id != ad.author" class="btn btn-info" ng-click="subscribe(ad._id)">
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                    </button>
+                    <button ng-if="user && isSubscription(ad._id)" class="btn btn-info" ng-click="unsubscribe(ad._id)">
+                        <span class="glyphicon glyphicon-star"></span>
+                    </button>
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>

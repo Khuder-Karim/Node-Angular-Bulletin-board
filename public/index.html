@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="courseApp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>CourseApp</title>
+
+    <link rel="stylesheet" href="vendor/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="vendor/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+    <div ui-view="header"></div>
+    <div ui-view="content"></div>
+    <div ui-view="footer"></div>
+
+
+    <script src="vendor/bower_components/angular/angular.min.js"></script>
+    <script src="vendor/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="vendor/bower_components/angular-resource/angular-resource.min.js"></script>
+    <script src="vendor/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="vendor/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/services/UserFactory.js"></script>
+    <script src="js/services/SessionFactory.js"></script>
+    <script src="js/services/AdFactory.js"></script>
+    <script src="js/services/SubscribeFactory.js"></script>
+    <script src="js/controllers/UserController.js"></script>
+    <script src="js/controllers/AdController.js"></script>
+    <script src="js/controllers/AdDetailController.js"></script>
+    <script src="js/controllers/AdCommentController.js"></script>
+
+    <script src="js/directives/fileModel.js"></script>
+</body>
+</html>
