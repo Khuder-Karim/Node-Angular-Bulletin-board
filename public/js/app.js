@@ -85,4 +85,5 @@ angular.module('courseApp', ['ui.router', 'ngResource'])
         SessionFactory.getSession();
     }])
     .constant('baseURL', "https://bulletin-board-app.herokuapp.com/")
+    //.constant('baseURL', "http://localhost:3000/")
 ;
