@@ -24,6 +24,9 @@
                     <button ng-if="user && user._id==ad.author" class="btn btn-danger" ng-click="deleteAd(ad._id)">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     </button>
+                    <a ng-if="user && user._id==ad.author" ui-sref="app.adEdit({id:ad._id})" class="btn btn-info">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                    </a>
                     <button ng-if="user && !isSubscription(ad._id) && user._id != ad.author" class="btn btn-info" ng-click="subscribe(ad._id)">
                         <span class="glyphicon glyphicon-star-empty"></span>
                     </button>

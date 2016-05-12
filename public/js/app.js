@@ -41,11 +41,11 @@ angular.module('courseApp', ['ui.router', 'ngResource'])
                 }
             })
 
-            .state('app.adEdit', {
-                url: 'adEdit',
+            .state('app.adCreate', {
+                url: 'create',
                 views: {
                     'content@': {
-                        templateUrl: 'views/adEdit.html'
+                        templateUrl: 'views/adCreate.html'
                     }
                 }
             })
@@ -64,6 +64,15 @@ angular.module('courseApp', ['ui.router', 'ngResource'])
                 views: {
                     'content@': {
                         templateUrl: 'views/profile.html'
+                    }
+                }
+            })
+
+            .state('app.adEdit', {
+                url: 'ad/:id/change',
+                views: {
+                    'content@': {
+                        templateUrl: 'views/adEdit.html'
                     }
                 }
             })

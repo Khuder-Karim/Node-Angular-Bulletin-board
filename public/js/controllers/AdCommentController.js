@@ -10,8 +10,13 @@ angular.module('courseApp')
 
         $scope.submitComment = function () {
             AdFactory.postComment().save({id: $stateParams.id}, $scope.comment, function(response) {
-                $scope.commentForm.$setPristine();
                 $scope.comment = {rating:5, text: ""};
+                $state.reload();
+            });
+        };
+
+        $scope.deleteComment = function(idCom) {
+            AdFactory.delComment().remove({id: $stateParams.id, comId: idCom}, function(response) {
                 $state.reload();
             });
         };

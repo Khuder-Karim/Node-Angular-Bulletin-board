@@ -50,8 +50,8 @@ angular.module('courseApp')
             var phone = $scope.registerData.phone;
 
             if(phone.length != 10 ||
-                (!isNaN(parseFloat(phone)) && isFinite(phone)) || phone[0] != '0') {
-                $scope.errorMessage = "Введите корректный номер телефона";
+                !(!isNaN(parseFloat(phone)) && isFinite(phone)) || phone[0] != '0') {
+                $scope.errorMessage = "Телефон должен содержать 10 цифр и начинаться с 0";
                 return;
             }
 

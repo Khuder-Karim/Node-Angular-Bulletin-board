@@ -8,21 +8,41 @@ angular.module('courseApp')
 
         this.getAds = function() {
             return $resource(baseURL+'ad/:id', null,
-                {'remove': {method: 'DELETE'}});
+                {'remove': {method: 'DELETE'}})
+            ;
         };
 
-        this.post = function(data) {
+        this.post = function(url, data) {
             var fd = new FormData();
 
             for(var key in data)
                 fd.append(key, data[key]);
 
-            $http.post(baseURL+'ad/', fd, {
+            $http.post(baseURL+url, fd, {
                 transformRequest: angular.indentity,
                 headers: { 'Content-Type': undefined }
             }).then(
                 function() {
-                    $state.go('app');
+                    $state.go('app.profile');
+                },
+                function(err) {
+                    console.log(err.status + ' ' + err.statusText);
+                }
+            );
+        };
+
+        this.postChange = function(url, data) {
+            var fd = new FormData();
+
+            for(var key in data)
+                fd.append(key, data[key]);
+
+            $http.put(baseURL+url, fd, {
+                transformRequest: angular.indentity,
+                headers: { 'Content-Type': undefined }
+            }).then(
+                function() {
+                    $state.go('app.profile');
                 },
                 function(err) {
                     console.log(err.status + ' ' + err.statusText);
@@ -32,6 +52,11 @@ angular.module('courseApp')
 
         this.postComment = function() {
             return $resource(baseURL+'ad/:id/comment');
+        };
+
+        this.delComment = function() {
+            return $resource(baseURL+'ad/:id/comment/:comId', null,
+                {'remove': {method: 'DELETE'}});
         };
 
     }])

@@ -7,6 +7,8 @@ angular.module('courseApp')
     .controller('AdController', ['$scope', '$rootScope', '$state', 'AdFactory', 'SubscribeFactory', 'SessionFactory', function($scope, $rootScope, $state, AdFactory, SubscribeFactory, SessionFactory) {
         $scope.adSchema = {};
         $scope.findText = "";
+        $scope.noMyAds = "";
+        $scope.noObserveAds = "";
 
         AdFactory.getAds().query(
             function(response) {
@@ -23,6 +25,10 @@ angular.module('courseApp')
                     })
                     : {}
                 ;
+                if($scope.MyAds.legth == 0)
+                    $scope.noMyAds = "Вы пока не создали обьявления";
+                if($scope.ObserveAd.length == 0)
+                    $scope.noObserveAds = "У Вас пока нет избранных обьявлений";
             },
             function(response) {
                 console.log("Error: " + response.status + " " + response.statusText);
@@ -31,7 +37,7 @@ angular.module('courseApp')
 
         $scope.Submit = function() {
             if(parseInt($scope.adSchema.price)) {
-                AdFactory.post($scope.adSchema);
+                AdFactory.post("ad/", $scope.adSchema);
             } else {
                 $scope.errorMessage = "Enter correct price";
             }

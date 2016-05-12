@@ -1,6 +1,7 @@
 <div class="container" ng-controller="AdController">
     <div class="row">
-        <h4>Ваши обьявления:</h4>
+
+        <h4 class="col-xs-12">Ваши обьявления: <br>{{noMyAds}}</h4>
 
         <div class="product col-xs-12 col-sm-4" ng-repeat="ad in MyAds">
             <a ui-sref="app.adDetails({id:ad._id})">
@@ -20,13 +21,16 @@
                     <button class="btn btn-danger" ng-click="deleteAd(ad._id)">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     </button>
+                    <a ui-sref="app.adEdit({id:ad._id})" class="btn btn-info">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                    </a>
                 </h3>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <h4>Избранные:</h4>
+        <h4 class="col-xs-12">Избранные: <br>{{noObserveAds}}</h4>
 
         <div class="product col-xs-12 col-sm-4" ng-repeat="ad in ObserveAd">
             <a ui-sref="app.adDetails({id:ad._id})">

@@ -5,6 +5,8 @@
 var mongoose = require('../libs/mongoose');
 var Schema = mongoose.Schema;
 
+var cloudinary = require('../libs/cloudinary');
+
 var AdSchema = new Schema({
     title: {
         type: String,
@@ -53,6 +55,33 @@ AdSchema.statics.getAdDetails = function(adID, callback) {
             else
                 callback(null, ad);
         });
+};
+
+AdSchema.methods.deleteImg = function(callback) {
+    if(this.img) {
+        var arr = this.img.split('/');
+        var public_id = arr[arr.length - 1].split('.')[0];
+
+        cloudinary.uploader.destroy(public_id, function(result) {
+            console.log(result);
+            callback();
+        });
+    } else {
+        callback();
+    }
+};
+
+AdSchema.statics.uploadImg = function(files, callback) {
+    if(files.file) {
+        cloudinary.uploader.upload(files.file[0].path, function(result) {
+            if(result.url)
+                callback(result.url);
+            else
+                callback();
+        });
+    } else {
+        callback();
+    }
 };
 
 

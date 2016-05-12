@@ -15,7 +15,6 @@ var Comment = require('../models/Comment');
 var User = require('../models/User');
 
 var multiparty = require('multiparty');
-var cloudinary = require('../libs/cloudinary');
 
 AdRouter.route('/')
     .get(function(req, res, next) {
@@ -35,11 +34,6 @@ AdRouter.route('/')
         var form = new multiparty.Form();
         var author = req.user._id;
 
-        function handler(err, ad) {
-            if(err) return next(err);
-            res.end();
-        }
-
         form.parse(req, function(err, fields, files) {
             if(err) return next(err);
             var obj = {
@@ -49,17 +43,14 @@ AdRouter.route('/')
                 author: author
             };
 
-            if(files.file) {
-                cloudinary.uploader.upload(files.file[0].path, function(result) {
-                    console.log(result.public_id);
-                    if(result.url) {
-                        obj.img = result.url;
-                        Ad.create(obj, handler);
-                    }
-                })
-            } else {
-                Ad.create(obj, handler);
-            }
+            Ad.uploadImg(files, function(img) {
+                if(img)
+                    obj.img = img;
+                Ad.create(obj, function(err) {
+                    if(err) return next(err);
+                    res.end();
+                });
+            });
         });
     })
 ;
@@ -69,6 +60,46 @@ AdRouter.route('/:adId')
         Ad.getAdDetails(req.params.adId, function(err, ad) {
             if(err) return next(err);
             res.json(ad);
+        });
+    })
+    .put(function(req, res, next) {
+        Ad.findById(req.params.adId, function(err, ad) {
+            if(err) return next(err);
+            if(ad) {
+                async.waterfall([
+                    function(callback) {
+                        var form = new multiparty.Form();
+                        form.parse(req, callback)
+                    },
+                    function(fields, files, callback) {
+                        if(files.file) {
+                            ad.deleteImg(function() {
+                                Ad.uploadImg(files, function(imgUrl) {
+                                    if(imgUrl)
+                                        callback(null, fields, imgUrl);
+                                    else
+                                        callback(new Error(500, 'Error in ad new img'));
+                                });
+                            });
+                        } else {
+                            callback(null, fields);
+                        }
+                    }
+                ], function(err, fields, imgUrl) {
+                    if(err) return next(err);
+                    ad.title = fields.title[0];
+                    ad.description = fields.description[0];
+                    ad.price = fields.price[0];
+                    if(imgUrl)
+                        ad.img = imgUrl;
+                    ad.save(function(err) {
+                        if(err) return next(err);
+                        res.end();
+                    });
+                });
+            } else {
+                next(new Error(404));
+            }
         });
     })
     .delete(function(req, res, next){
@@ -87,18 +118,7 @@ AdRouter.route('/:adId')
                         });
                     },
                     function(callback) {
-                        if(ad.img) {
-                            var arr = ad.img.split('/');
-                            var public_id = arr[arr.length - 1].split('.')[0];
-                            console.log(public_id);
-
-                            cloudinary.uploader.destroy(public_id, function(result) {
-                                console.log(result);
-                                callback();
-                            })
-                        } else {
-                            callback();
-                        }
+                        ad.deleteImg(callback);
                     },
                     function(callback) {
                         User.find({liked: ad._id}, function(err, users) {
@@ -130,6 +150,16 @@ AdRouter.route('/:adId/comment')
         obj.author = req.user._id;
         req.user.setComment(req.params.adId, obj, function(err) {
             if(err) return callback(err);
+            res.end();
+        });
+    })
+
+;
+
+AdRouter.route('/:adId/comment/:comId')
+    .delete(function(req, res, next) {
+        Comment.findByIdAndRemove(req.params.comId, function(err) {
+            if(err) return next(err);
             res.end();
         });
     })
