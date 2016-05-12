@@ -84,4 +84,5 @@ angular.module('courseApp', ['ui.router', 'ngResource'])
     .run(['SessionFactory', function(SessionFactory) {
         SessionFactory.getSession();
     }])
+    .constant('baseURL', "https://bulletin-board-app.herokuapp.com/")
 ;

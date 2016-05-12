@@ -3,7 +3,7 @@
  */
 
 angular.module('courseApp')
-    .constant('baseURL', "http://localhost:3000/")
+
     .service('AdFactory', ['$http', '$state', '$resource', 'baseURL', function($http, $state, $resource, baseURL) {
 
         this.getAds = function() {
