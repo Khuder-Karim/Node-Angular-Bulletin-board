@@ -8,7 +8,7 @@
     <div class="row">
         <div class="product col-xs-12 col-sm-4" ng-repeat="ad in ads">
             <a ui-sref="app.adDetails({id:ad._id})">
-                <img ng-if="ad.img" ng-src="{{ad.img}}" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
+                <img ng-if="ad.img" ng-src="{{ad.img}}" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px; max-height: 65%;">
                 <img ng-if="!ad.img" ng-src="../images/no_photo.jpg" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
             </a>
             <a ui-sref="app.adDetails({id:ad._id})">
