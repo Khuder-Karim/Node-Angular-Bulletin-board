@@ -1,14 +1,16 @@
 <div class="container" ng-controller="AdController">
     <div class="row">
         <div class="searchBlock">
-            <input type="text" ng-model="findText">
-            <button class="btn-info" ng-click="find()">Поиск</button>
+            <form ng-submit="find()" class="form">
+                <input type="text" ng-model="findText">
+                <button type="submit" class="btn-info">Поиск</button>
+            </form>
         </div>
     </div>
     <div class="row">
-        <div class="product col-xs-12 col-sm-4" ng-repeat="ad in ads">
+        <div class="product col-xs-12 col-sm-4" ng-repeat="ad in listAds">
             <a ui-sref="app.adDetails({id:ad._id})">
-                <img ng-if="ad.img" ng-src="{{ad.img}}" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px; max-height: 65%;">
+                <img ng-if="ad.img" ng-src="{{ad.img}}" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
                 <img ng-if="!ad.img" ng-src="../images/no_photo.jpg" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
             </a>
             <a ui-sref="app.adDetails({id:ad._id})">
@@ -27,7 +29,7 @@
                     <a ng-if="user && user._id==ad.author" ui-sref="app.adEdit({id:ad._id})" class="btn btn-info">
                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                     </a>
-                    <button ng-if="user && !isSubscription(ad._id) && user._id != ad.author" class="btn btn-info" ng-click="subscribe(ad._id)">
+                    <button ng-if="user && !isSubscription(ad._id) && user._id != ad.author" class="btn btn-info" ng-click="subscribe(ad)">
                         <span class="glyphicon glyphicon-star-empty"></span>
                     </button>
                     <button ng-if="user && isSubscription(ad._id)" class="btn btn-info" ng-click="unsubscribe(ad._id)">

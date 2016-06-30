@@ -7,17 +7,21 @@ angular.module('courseApp')
     .controller('AdCommentController', ['$scope', '$stateParams', '$state', 'AdFactory', function($scope, $stateParams, $state, AdFactory) {
 
         $scope.comment = {rating:5, text:""};
+        $scope.form = {};
 
         $scope.submitComment = function () {
-            AdFactory.postComment().save({id: $stateParams.id}, $scope.comment, function(response) {
+            AdFactory.postComment($stateParams.id, $scope.comment).then(function(response) {
+                $scope.ad.comments.push(response.data);
                 $scope.comment = {rating:5, text: ""};
-                $state.reload();
+
+                $scope.form.commentForm.$setPristine();
             });
         };
 
         $scope.deleteComment = function(idCom) {
-            AdFactory.delComment().remove({id: $stateParams.id, comId: idCom}, function(response) {
-                $state.reload();
+            AdFactory.deleteComment($stateParams.id, idCom).then(function() {
+                var index = $scope.ad.comments.indexOf(idCom);
+                $scope.ad.comments.splice(index, 1);
             });
         };
 

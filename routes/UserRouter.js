@@ -17,10 +17,34 @@ UserRouter.route('/')
                 User.create(req.body, function(err, user) {
                     if(err) return next(err);
                     req.session.user = user._id;
-                    res.end();
+                    res.json(user);
                 });
             }
         });
+    })
+;
+
+UserRouter.route('/login')
+    .post(function(req, res, next){
+        User.authorize(req.body.username, req.body.password, function(err, user) {
+            if(err) return next(err);
+
+            req.session.user = user._id;
+            res.json(user);
+        })
+    })
+;
+
+UserRouter.route('/logout')
+    .post(function(req, res, next) {
+        req.session.destroy();
+        res.json({});
+    })
+;
+
+UserRouter.route('/loadSession')
+    .get(function(req, res, next) {
+        res.json(req.user);
     })
 ;
 

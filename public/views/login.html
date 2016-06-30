@@ -4,14 +4,14 @@
             <div class="form-group" ng-class="{ 'has-error' : LoginForm.username.$error.required && !LoginForm.username.$pristine }">
                 <label for="username" class="col-sm-4 control-label">First Name</label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" ng-model="userObject.username" required>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" ng-model="client.username" required>
                     <span ng-show="LoginForm.username.$error.required && !LoginForm.username.$pristine" class="help-block">Username обьязательный</span>
                 </div>
             </div>
             <div class="form-group" ng-class="{'has-error' : LoginForm.password.$error.required && LoginForm.password.$dirty}">
                 <label for="password" class="col-sm-4 control-label">Password</label>
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" ng-model="userObject.password" required>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" ng-model="client.password" required>
                     <span ng-show="LoginForm.password.$error.required && LoginForm.password.$dirty" class="help-block">Пароль обьязательный</span>
                     <span ng-show="errorMessage">{{errorMessage}}</span>
                 </div>

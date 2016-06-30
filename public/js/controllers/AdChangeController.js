@@ -9,19 +9,25 @@ angular.module('courseApp')
 
         $scope.errorMessage = '';
 
-        $scope.ad = AdFactory.getAds().get({id: $stateParams.id})
-            .$promise.then(
-                function(response) {
-                    $scope.adSchema = response;
-                },
-                function(error) {
-                    $scope.errorMessage = response.status + " " + response.statusText;
-                }
-            )
-        ;
+        AdFactory.getAdDetails($stateParams.id).then(
+            function(response) {
+                $scope.ad = response.data;
+                $scope.adSchema = response.data;
+            },
+            function(err) {
+                $scope.errorMessage = err.data.status + err.data.message;
+            }
+        );
 
         $scope.submitChange = function() {
-            AdFactory.postChange("ad/" + $scope.adSchema._id, $scope.adSchema);
+            AdFactory.postChange($scope.adSchema, $scope.adSchema._id).then(
+                function(response) {
+                    $state.go('app.profile');
+                },
+                function(err) {
+                    $scope.errorMessage = err.data.status + err.data.message;
+                }
+            );
         };
 
     }])

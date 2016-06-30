@@ -4,50 +4,33 @@
 
 angular.module('courseApp')
 
-    .controller('UserController', ['$stateParams', '$scope', '$rootScope', '$state', 'UserFactory', 'SessionFactory', function($stateParams, $scope, $rootScope, $state,
-                                                                                                 UserFactory, SessionFactory) {
+    .controller('UserController', ['$http', '$scope', '$rootScope', '$state', 'UserFactory', function($http, $scope, $rootScope, $state,
+                                                                                                 UserFactory) {
 
-        $scope.userObject = {
-            username: '',
-            password: ''
-        };
-
-        $scope.registerData = {
-            username: '',
-            password: '',
-            email: '',
-            phone: ''
-        };
-
-        $scope.errorMessage = '';
+        $scope.client = {};
+        $scope.newClient = {};
+        $scope.errorMessage = "";
 
         $scope.logout = function() {
-            UserFactory.logout().save(
-                function() {
-                    SessionFactory.getSession();
-                    $state.go('app');
-                },
-                function(err) {
-                    console.log(err);
-                }
-            );
+            UserFactory.logout().then(function() {
+                $rootScope.user = null;
+            });
         };
 
         $scope.login = function() {
-            UserFactory.login().save($scope.userObject,
-                function() {
-                    SessionFactory.getSession();
-                    $state.go('app');
+            UserFactory.login($scope.client).then(
+                function(response) {
+                    $rootScope.user = response.data;
+                    $state.go("app.profile");
                 },
                 function(err) {
-                    console.log(err);
                     $scope.errorMessage = err.data.message;
                 }
             );
         };
 
         $scope.register = function() {
-            var phone = $scope.registerData.phone;
+            var phone = $scope.newClient.phone;
 
             if(phone.length != 10 ||
                 !(!isNaN(parseFloat(phone)) && isFinite(phone)) || phone[0] != '0') {
@@ -55,12 +38,12 @@ angular.module('courseApp')
                 return;
             }
 
-            UserFactory.register().save($scope.registerData,
-                function() {
-                    SessionFactory.getSession();
-                    $state.go('app');
+            UserFactory.register($scope.newClient).then(
+                function(response) {
+                    $rootScope.user = response.data;
+                    $state.go("app");
                 },
-                function(err) {
+                function(error) {
                     $scope.errorMessage = err.data.message;
                 }
             );

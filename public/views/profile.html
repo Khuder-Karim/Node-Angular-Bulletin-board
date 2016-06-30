@@ -1,9 +1,9 @@
 <div class="container" ng-controller="AdController">
-    <div class="row">
+    <div class="row" ng-if="listMyAds.length">
 
-        <h4 class="col-xs-12">Ваши обьявления: <br>{{noMyAds}}</h4>
+        <h4 class="col-xs-12">Ваши обьявления:</h4>
 
-        <div class="product col-xs-12 col-sm-4" ng-repeat="ad in MyAds">
+        <div class="product col-xs-12 col-sm-4" ng-repeat="ad in listMyAds">
             <a ui-sref="app.adDetails({id:ad._id})">
                 <img ng-if="ad.img" ng-src="{{ad.img}}" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px; max-height: 65%;">
                 <img ng-if="!ad.img" ng-src="../images/no_photo.jpg" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
@@ -29,10 +29,10 @@
         </div>
     </div>
 
-    <div class="row">
-        <h4 class="col-xs-12">Избранные: <br>{{noObserveAds}}</h4>
+    <div class="row" ng-if="observeAds.length">
+        <h4 class="col-xs-12">Избранные: </h4>
 
-        <div class="product col-xs-12 col-sm-4" ng-repeat="ad in ObserveAd">
+        <div class="product col-xs-12 col-sm-4" ng-repeat="ad in observeAds">
             <a ui-sref="app.adDetails({id:ad._id})">
                 <img ng-if="ad.img" ng-src="{{ad.img}}" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
                 <img ng-if="!ad.img" ng-src="../images/no_photo.jpg" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
@@ -52,6 +52,16 @@
                     </button>
                 </h3>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 ng-if="!listMyAds.length">Ваших обьявлений пока нет</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 ng-if="!observeAds.length">Избранных обьявлений пока нет</h3>
         </div>
     </div>
 

@@ -4,59 +4,54 @@
 
 angular.module('courseApp')
 
-    .service('AdFactory', ['$http', '$state', '$resource', 'baseURL', function($http, $state, $resource, baseURL) {
+    .service('AdFactory', ['$http', '$state', '$rootScope', function($http, $state, $rootScope) {
 
         this.getAds = function() {
-            return $resource(baseURL+'ad/:id', null,
-                {'remove': {method: 'DELETE'}})
-            ;
+            return $http.get('/ad');
         };
 
-        this.post = function(url, data) {
+        this.getAdDetails = function(id) {
+            return $http.get('/ad/'+id);
+        };
+
+        this.findAd = function(findText) {
+            return $http.get('/ad', {params: {find: findText}});
+        };
+
+        this.deleteAd = function(id) {
+            return $http.delete('/ad/'+id);
+        };
+
+        this.post = function(data) {
             var fd = new FormData();
 
             for(var key in data)
                 fd.append(key, data[key]);
 
-            $http.post(baseURL+url, fd, {
+            return $http.post('/ad', fd, {
                 transformRequest: angular.indentity,
                 headers: { 'Content-Type': undefined }
-            }).then(
-                function() {
-                    $state.go('app.profile');
-                },
-                function(err) {
-                    console.log(err.status + ' ' + err.statusText);
-                }
-            );
+            });
         };
 
-        this.postChange = function(url, data) {
+        this.postChange = function(data, id) {
             var fd = new FormData();
 
             for(var key in data)
                 fd.append(key, data[key]);
 
-            $http.put(baseURL+url, fd, {
+            return $http.put('/ad/'+id, fd, {
                 transformRequest: angular.indentity,
                 headers: { 'Content-Type': undefined }
-            }).then(
-                function() {
-                    $state.go('app.profile');
-                },
-                function(err) {
-                    console.log(err.status + ' ' + err.statusText);
-                }
-            );
+            });
         };
 
-        this.postComment = function() {
-            return $resource(baseURL+'ad/:id/comment');
+        this.postComment = function(id, comment) {
+            return $http.post('/ad/'+id+'/comment', comment);
         };
 
-        this.delComment = function() {
-            return $resource(baseURL+'ad/:id/comment/:comId', null,
-                {'remove': {method: 'DELETE'}});
+        this.deleteComment = function(idAd, idComment) {
+            return $http.delete('/ad/'+idAd+'/comment/'+idComment);
         };
 
     }])

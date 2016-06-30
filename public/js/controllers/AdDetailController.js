@@ -4,18 +4,15 @@
 
 angular.module('courseApp')
 
-    .controller('AdDetailController', ['$scope', '$stateParams', '$sce', 'AdFactory', function($scope, $stateParams, $sce, AdFactory) {
+    .controller('AdDetailController', ['$scope', '$stateParams', 'AdFactory', function($scope, $stateParams, AdFactory) {
         $scope.ad = {};
-        AdFactory.getAds().get({id: $stateParams.id})
-            .$promise.then(
-                function(response) {
-                    $scope.ad = response;
-                },
-                function(err) {
-                    console.log(err.status + ' ' + err.statusText);
-                }
-            )
-        ;
-
+        AdFactory.getAdDetails($stateParams.id).then(
+            function(response) {
+                $scope.ad = response.data;
+            },
+            function(err) {
+                console.error(err.data.status, err.data.message);
+            }
+        );
     }])
 ;

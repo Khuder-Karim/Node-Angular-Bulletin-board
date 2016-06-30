@@ -4,58 +4,58 @@
 
 angular.module('courseApp')
 
-    .controller('AdController', ['$scope', '$rootScope', '$state', 'AdFactory', 'SubscribeFactory', 'SessionFactory', function($scope, $rootScope, $state, AdFactory, SubscribeFactory, SessionFactory) {
+    .controller('AdController', ['$scope', '$rootScope', '$state', 'AdFactory', 'SubscribeFactory', function($scope, $rootScope, $state, AdFactory, SubscribeFactory) {
         $scope.adSchema = {};
         $scope.findText = "";
-        $scope.noMyAds = "";
-        $scope.noObserveAds = "";
 
-        AdFactory.getAds().query(
-            function(response) {
-                $scope.ads = response;
-                $scope.MyAds = $rootScope.user ?
-                    $scope.ads.filter(function(ad) {
-                        return ad.author == $rootScope.user._id;
-                    })
-                    : {}
-                ;
-                $scope.ObserveAd = $rootScope.user ?
-                    $scope.ads.filter(function(ad) {
-                        return $rootScope.user.liked.indexOf(ad._id) > -1
-                    })
-                    : {}
-                ;
-                if($scope.MyAds.legth == 0)
-                    $scope.noMyAds = "Вы пока не создали обьявления";
-                if($scope.ObserveAd.length == 0)
-                    $scope.noObserveAds = "У Вас пока нет избранных обьявлений";
-            },
-            function(response) {
-                console.log("Error: " + response.status + " " + response.statusText);
-            }
-        );
+        $scope.listAds = [];
+        $scope.listMyAds = [];
+        $scope.observeAds = [];
 
-        $scope.Submit = function() {
-            if(parseInt($scope.adSchema.price)) {
-                AdFactory.post("ad/", $scope.adSchema);
-            } else {
-                $scope.errorMessage = "Enter correct price";
+        AdFactory.getAds().then(function(response) {
+            $scope.listAds = response.data;
+
+            if($state.current.name === "app.profile") {
+                $scope.listMyAds = $scope.listAds.filter(function(ad) {
+                    return ad.author === $rootScope.user._id;
+                });
+
+                $scope.observeAds = $scope.listAds.filter(function(ad) {
+                    return ~$rootScope.user.liked.indexOf(ad._id);
+                });
             }
+        });
+
+
+        $scope.postAd = function() {
+            AdFactory.post($scope.adSchema).then(
+                function(response) {
+                    $scope.listAds.push(response.data);
+                    $scope.listMyAds.push(response.data);
+                    $state.go('app.profile');
+                },
+                function(error) {
+                    console.error(error.data.status, error.data.message);
+                }
+            )
         };
 
-        $scope.subscribe = function(adId) {
-            SubscribeFactory.subscribe().save({id: adId}, {}, function() {
+
+        $scope.subscribe = function(ad) {
+            SubscribeFactory.subscribe(ad._id).then(function() {
                 console.log("subscribe");
-                SessionFactory.getSession();
-                $state.reload();
+                $scope.observeAds.push(ad);
+                $rootScope.user.liked.push(ad._id);
             });
         };
 
         $scope.unsubscribe = function(adId) {
-            SubscribeFactory.unsubscribe().save({id: adId}, {}, function() {
+            SubscribeFactory.unsubscribe(adId).then(function() {
                 console.log("unsubscribe");
-                SessionFactory.getSession();
-                $state.reload();
+                var index1 = $scope.observeAds.map(function(ad) {return ad._id}).indexOf(adId);
+                $scope.observeAds.splice(index1, 1);
+                var index2 = $rootScope.user.liked.indexOf(adId);
+                $rootScope.user.liked.splice(index2, 1);
             });
         };
 
@@ -64,16 +64,20 @@ angular.module('courseApp')
         };
 
         $scope.deleteAd = function(adId) {
-            AdFactory.getAds().remove({id: adId})
-                .$promise.then(function() {
-                    $state.reload();
-                })
-            ;
+            AdFactory.deleteAd(adId).then(function() {
+                var index1 = $scope.listMyAds.map(function(ad) {return ad._id}).indexOf(adId);
+                $scope.listMyAds.splice(index1, 1);
+                var index2 = $scope.listAds.map(function(ad) {return ad._id}).indexOf(adId);
+                $scope.listAds.splice(index2, 1);
+            });
         };
 
         $scope.find = function() {
-            AdFactory.getAds().query({find: $scope.findText}, function(response) {
-                $scope.ads = response;
+            AdFactory.findAd($scope.findText).then(function(response) {
+                $scope.listAds = [];
+                response.data.forEach(function(ad) {
+                    $scope.listAds.push(ad);
+                });
             });
         };
 

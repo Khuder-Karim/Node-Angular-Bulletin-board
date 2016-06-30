@@ -78,13 +78,17 @@ UserSchema.methods.setComment = function(adID, objComment, callback) {
             Ad.findById(adID, callback);
         },
         function(ad, callback) {
+            console.log("fds");
             if(ad) {
                 Comment.create(objComment, function(err, comment) {
                     if(err) return callback(err);
                     ad.comments.push(comment._id);
                     ad.save(function(err) {
                         if(err) return callback(err);
-                        callback(null, comment);
+                        Comment.findById(comment._id)
+                            .populate('author', 'username')
+                            .exec(callback)
+                        ;
                     });
                 })
             } else {

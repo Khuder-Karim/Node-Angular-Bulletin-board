@@ -7,7 +7,6 @@ var AdRouter = express.Router();
 var mongoose = require('../libs/mongoose');
 
 var async = require('async');
-var fs = require('fs');
 var path = require('path');
 
 var Ad = require('../models/Ad');
@@ -15,6 +14,8 @@ var Comment = require('../models/Comment');
 var User = require('../models/User');
 
 var multiparty = require('multiparty');
+
+var checkAuth = require('../middleware/checkAuth');
 
 AdRouter.route('/')
     .get(function(req, res, next) {
@@ -46,14 +47,15 @@ AdRouter.route('/')
             Ad.uploadImg(files, function(img) {
                 if(img)
                     obj.img = img;
-                Ad.create(obj, function(err) {
+                Ad.create(obj, function(err, ad) {
                     if(err) return next(err);
-                    res.end();
+                    res.json(ad);
                 });
             });
         });
     })
 ;
+
 
 AdRouter.route('/:adId')
     .get(function(req,res,next){
@@ -62,7 +64,7 @@ AdRouter.route('/:adId')
             res.json(ad);
         });
     })
-    .put(function(req, res, next) {
+    .put(checkAuth, function(req, res, next) {
         Ad.findById(req.params.adId, function(err, ad) {
             if(err) return next(err);
             if(ad) {
@@ -102,7 +104,7 @@ AdRouter.route('/:adId')
             }
         });
     })
-    .delete(function(req, res, next){
+    .delete(checkAuth, function(req, res, next){
         Ad.findById(req.params.adId, function(err, ad) {
             if(err) return next(err);
             if(ad) {
@@ -145,43 +147,59 @@ AdRouter.route('/:adId')
 ;
 
 AdRouter.route('/:adId/comment')
-    .post(function(req, res, next) {
+    .post(checkAuth, function(req, res, next) {
         var obj = req.body;
         obj.author = req.user._id;
-        req.user.setComment(req.params.adId, obj, function(err) {
-            if(err) return callback(err);
-            res.end();
+
+        req.user.setComment(req.params.adId, obj, function(err, comment) {
+            if(err) return next(err);
+            res.json(comment);
         });
     })
 
 ;
 
 AdRouter.route('/:adId/comment/:comId')
-    .delete(function(req, res, next) {
-        Comment.findByIdAndRemove(req.params.comId, function(err) {
+    .delete(checkAuth, function(req, res, next) {
+        async.parallel([
+            function(callback) {
+                Comment.findByIdAndRemove(req.params.comId, callback);
+            },
+            function(callback) {
+                Ad.findById(req.params.adId, function(err, ad) {
+                    if(err) return next(err);
+                    var index = ad.comments.indexOf(req.params.comId);
+                    ad.comments.splice(index, 1);
+                    ad.save(callback);
+                })
+            }
+        ], function(err) {
             if(err) return next(err);
-            res.end();
-        });
+            res.json({});
+        })
+
     })
 ;
 
 AdRouter.route('/:adId/subscribe')
-    .post(function(req, res, next) {
+    .post(checkAuth, function(req, res, next) {
         Ad.findById(req.params.adId, function(err, ad) {
             if(err) return next(err);
             if(ad) {
                 req.user.liked.push(ad._id);
                 req.user.save(function(err) {
                     if(err) return next(err);
-                })
+                    res.json(ad);
+                });
+            } else {
+                res.end();
             }
-            res.end();
         });
     })
 ;
 
 AdRouter.route('/:adId/unsubscribe')
-    .post(function(req, res, next) {
+    .post(checkAuth, function(req, res, next) {
         Ad.findById(req.params.adId, function(err, ad) {
             if(err) return next(err);
             if(ad) {
@@ -189,9 +207,11 @@ AdRouter.route('/:adId/unsubscribe')
                 req.user.liked.splice(index, 1);
                 req.user.save(function(err) {
                     if(err) return next(err);
+                    res.json({id: ad._id});
                 })
+            } else {
+                res.end();
             }
-            res.end();
         });
     })
 ;

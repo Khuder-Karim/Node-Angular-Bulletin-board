@@ -4,17 +4,16 @@
 
 angular.module('courseApp')
 
-    .service('UserFactory', ['$resource', 'baseURL', function($resource, baseURL) {
+    .service('UserFactory', ['$http', function($http) {
+        this.login = function(client) {
+            return $http.post('/user/login', client);
+        };
         this.logout = function() {
-            return $resource(baseURL+'logout');
+            return $http.post('/user/logout');
         };
 
-        this.login = function() {
-            return $resource(baseURL+'login');
-        };
-
-        this.register = function() {
-            return $resource(baseURL+'user');
+        this.register = function(newClient) {
+            return $http.post('/user', newClient);
         };
     }])
 ;

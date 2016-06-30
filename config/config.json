@@ -12,7 +12,7 @@
      	}
     },
     "session": {
-    	"secret": "MyCourse",
+    	"secret": "test!coursE!1654&karim!secReT",
     	"key": "sid",
     	"cookie": {
         	"path": "/",

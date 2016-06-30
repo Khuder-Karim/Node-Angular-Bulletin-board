@@ -3,12 +3,12 @@
  */
 'use strict';
 
-angular.module('courseApp', ['ui.router', 'ngResource'])
+angular.module('courseApp', ['ui.router'])
     .config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
 
             .state('app', {
-                url: '/',
+                url: '/?find',
                 cache: false,
                 views: {
                     'header': {
@@ -24,7 +24,7 @@ angular.module('courseApp', ['ui.router', 'ngResource'])
             })
 
             .state('app.login', {
-                url: '/login',
+                url: 'login',
                 views: {
                     'content@': {
                         templateUrl: 'views/login.html'
@@ -81,9 +81,11 @@ angular.module('courseApp', ['ui.router', 'ngResource'])
 
         $urlRouterProvider.otherwise('/');
     })
-    .run(['SessionFactory', function(SessionFactory) {
-        SessionFactory.getSession();
+    .run(['$http', '$rootScope', function($http, $rootScope) {
+        $http.get('/user/loadSession').then(
+            function(response) {
+                $rootScope.user = response.data;
+            }
+        );
     }])
-    .constant('baseURL', "http://bulletin-board-app.herokuapp.com/")
-    //.constant('baseURL', "http://localhost:3000/")
 ;
