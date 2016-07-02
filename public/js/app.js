@@ -9,7 +9,6 @@ angular.module('courseApp', ['ui.router'])
 
             .state('app', {
                 url: '/?find',
-                cache: false,
                 views: {
                     'header': {
                         templateUrl: 'views/header.html'

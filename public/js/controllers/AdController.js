@@ -4,28 +4,10 @@
 
 angular.module('courseApp')
 
-    .controller('AdController', ['$scope', '$rootScope', '$state', 'AdFactory', 'SubscribeFactory', function($scope, $rootScope, $state, AdFactory, SubscribeFactory) {
-        $scope.adSchema = {};
-        $scope.findText = "";
+    .controller('AdController', ['$scope', '$rootScope', '$state', 'AdFactory', 'SubscribeFactory', '$location',
+        function($scope, $rootScope, $state, AdFactory, SubscribeFactory, $location) {
 
-        $scope.listAds = [];
-        $scope.listMyAds = [];
-        $scope.observeAds = [];
-
-        AdFactory.getAds().then(function(response) {
-            $scope.listAds = response.data;
-
-            if($state.current.name === "app.profile") {
-                $scope.listMyAds = $scope.listAds.filter(function(ad) {
-                    return ad.author === $rootScope.user._id;
-                });
-
-                $scope.observeAds = $scope.listAds.filter(function(ad) {
-                    return ~$rootScope.user.liked.indexOf(ad._id);
-                });
-            }
-        });
-
+        init();
 
         $scope.postAd = function() {
             AdFactory.post($scope.adSchema).then(
@@ -72,14 +54,32 @@ angular.module('courseApp')
             });
         };
 
-        $scope.find = function() {
-            AdFactory.findAd($scope.findText).then(function(response) {
-                $scope.listAds = [];
-                response.data.forEach(function(ad) {
-                    $scope.listAds.push(ad);
+        function init() {
+            var findText = $state.params.find;
+
+            if(findText) {
+                AdFactory.findAds(findText).then(function(response) {
+                    $scope.listAds = response.data;
+                    if(!$scope.listAds.length) {
+                        $scope.notFoundError = "По Вашему запросу нет обьявлений (("
+                    }
                 });
-            });
-        };
+            } else {
+                AdFactory.getAds().then(function(response) {
+                    $scope.listAds = response.data;
+
+                    if($state.current.name === "app.profile") {
+                        $scope.listMyAds = $scope.listAds.filter(function(ad) {
+                            return ad.author === $rootScope.user._id;
+                        });
+
+                        $scope.observeAds = $scope.listAds.filter(function(ad) {
+                            return ~$rootScope.user.liked.indexOf(ad._id);
+                        });
+                    }
+                })
+            }
+        }
 
     }])
 ;

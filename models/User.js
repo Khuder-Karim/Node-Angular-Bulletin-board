@@ -78,7 +78,6 @@ UserSchema.methods.setComment = function(adID, objComment, callback) {
             Ad.findById(adID, callback);
         },
         function(ad, callback) {
-            console.log("fds");
             if(ad) {
                 Comment.create(objComment, function(err, comment) {
                     if(err) return callback(err);

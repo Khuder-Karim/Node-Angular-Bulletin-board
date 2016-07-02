@@ -6,10 +6,10 @@ angular.module('courseApp')
 
     .controller('UserController', ['$http', '$scope', '$rootScope', '$state', 'UserFactory', function($http, $scope, $rootScope, $state,
                                                                                                  UserFactory) {
-
         $scope.client = {};
         $scope.newClient = {};
         $scope.errorMessage = "";
+        $scope.findText = "";
 
         $scope.logout = function() {
             UserFactory.logout().then(function() {
@@ -47,6 +47,10 @@ angular.module('courseApp')
                     $scope.errorMessage = err.data.message;
                 }
             );
+        };
+
+        $scope.find = function() {
+            $state.go('app', {find: $scope.findText});
         };
 
     }])

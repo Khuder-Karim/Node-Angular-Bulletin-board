@@ -8,28 +8,33 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" ui-sref="app">
+                <a class="navbar-brand" ui-sref="app" ui-sref-opts="{inherit: false}">
                     <img src="../images/icon.png" alt="icon" style="max-height: 100%; display: inline-block; padding-right: 20px;">
-                    <span>Главная</span>
                 </a>
             </div>
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <form class="navbar-form navbar-left" role="search" ng-submit="find()">
+                    <div class="form-group has-feedback">
+                        <input type="text" class="form-control" placeholder="Search" ng-model="findText">
+                        <a class="form-control-feedback glyphicon glyphicon-search" ng-click="find()" style="pointer-events: auto; text-decoration: none;cursor: pointer;"></a>
+                    </div>
+                </form>
                 <ul class="nav navbar-nav navbar-right">
                     <li ng-if="user">
-                        <a ui-sref="app.adCreate" class="btn btn-warning create-btn">Дать обьявление</a>
+                        <a ui-sref="app.adCreate" class="btn btn-warning create-btn" ui-sref-opts="{inherit: false}">Дать обьявление</a>
                     </li>
                     <li ng-if="user">
-                        <a ui-sref="app.profile">Профиль</a>
+                        <a ui-sref="app.profile" ui-sref-opts="{inherit: false}">Профиль</a>
                     </li>
                     <li ng-if="user">
                         <a ui-sref="app" ng-click="logout()">Выйти</a>
                     </li>
                     <li ng-if="!user">
-                        <a ui-sref="app.login">Войти</a>
+                        <a ui-sref="app.login" ui-sref-opts="{inherit: false}">Войти</a>
                     </li>
                     <li ng-if="!user">
-                        <a ui-sref="app.register">Регистрация</a>
+                        <a ui-sref="app.register" ui-sref-opts="{inherit: false}">Регистрация</a>
                     </li>
                 </ul>
             </div>

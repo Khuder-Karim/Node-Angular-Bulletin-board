@@ -1,15 +1,10 @@
 <div class="container" ng-controller="AdController">
     <div class="row">
-        <div class="searchBlock">
-            <form ng-submit="find()" class="form">
-                <input type="text" ng-model="findText">
-                <button type="submit" class="btn-info">Поиск</button>
-            </form>
+        <div class="col-xs-12" ng-if="notFoundError">
+            <h3>{{notFoundError}}</h3>
         </div>
-    </div>
-    <div class="row">
         <div class="product col-xs-12 col-sm-4" ng-repeat="ad in listAds">
-            <a ui-sref="app.adDetails({id:ad._id})">
+            <a ui-sref="app.adDetails({id:ad._id})" ui-sref-opts="{inherit: false}">
                 <img ng-if="ad.img" ng-src="{{ad.img}}" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
                 <img ng-if="!ad.img" ng-src="../images/no_photo.jpg" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
             </a>

@@ -14,7 +14,7 @@ angular.module('courseApp')
             return $http.get('/ad/'+id);
         };
 
-        this.findAd = function(findText) {
+        this.findAds = function(findText) {
             return $http.get('/ad', {params: {find: findText}});
         };
 
