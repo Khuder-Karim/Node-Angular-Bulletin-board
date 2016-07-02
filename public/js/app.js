@@ -15,9 +15,6 @@ angular.module('courseApp', ['ui.router'])
                     },
                     'content': {
                         templateUrl: 'views/home.html'
-                    },
-                    'footer': {
-                        templateUrl: 'views/footer.html'
                     }
                 }
             })

@@ -13,7 +13,9 @@ angular.module('courseApp')
 
         $scope.logout = function() {
             UserFactory.logout().then(function() {
-                $rootScope.user = null;
+               $http.get('/user/loadSession').then(function(response) {
+                    $rootScope.user = response.data;
+               });
             });
         };
 

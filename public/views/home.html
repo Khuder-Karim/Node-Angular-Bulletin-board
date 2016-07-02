@@ -4,33 +4,36 @@
             <h3>{{notFoundError}}</h3>
         </div>
         <div class="product col-xs-12 col-sm-4" ng-repeat="ad in listAds">
-            <a ui-sref="app.adDetails({id:ad._id})" ui-sref-opts="{inherit: false}">
-                <img ng-if="ad.img" ng-src="{{ad.img}}" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
-                <img ng-if="!ad.img" ng-src="../images/no_photo.jpg" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
+            <a ui-sref="app.adDetails({id:ad._id})" ui-sref-opts="{inherit: false}" class="image">
+                <img ng-if="ad.img" ng-src="{{ad.img}}" alt="{{ad.title}}" class="img-responsive center-block">
+                <img ng-if="!ad.img" ng-src="../images/no_photo.jpg" alt="{{ad.title}}" class="img-responsive center-block">
             </a>
-            <a ui-sref="app.adDetails({id:ad._id})">
-                <h4>{{ad.title}}</h4>
-            </a>
-            <span>{{ad.created | date: 'longDate'}}</span>
+            <h4 class="description">
+                <a ui-sref="app.adDetails({id:ad._id})">
+                    {{ad.title | limitTo: 120}}{{ad.title.length > 120 ? '...' : ''}}<br>
+                    <small class="date">{{ad.created | date: 'longDate'}}</small>
+                </a>
+            </h4>
 
-            <div class="row manipuleAd">
-                <h3 class="col-xs-6">
-                    <strong class="label label-success">{{ad.price}} Грн</strong>
-                </h3>
-                <h3 class="col-xs-6" style="text-align: right">
-                    <button ng-if="user && user._id==ad.author" class="btn btn-danger" ng-click="deleteAd(ad._id)">
-                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                    </button>
-                    <a ng-if="user && user._id==ad.author" ui-sref="app.adEdit({id:ad._id})" class="btn btn-info">
-                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                    </a>
-                    <button ng-if="user && !isSubscription(ad._id) && user._id != ad.author" class="btn btn-info" ng-click="subscribe(ad)">
-                        <span class="glyphicon glyphicon-star-empty"></span>
-                    </button>
-                    <button ng-if="user && isSubscription(ad._id)" class="btn btn-info" ng-click="unsubscribe(ad._id)">
-                        <span class="glyphicon glyphicon-star"></span>
-                    </button>
-                </h3>
+            <div class="footer clearfix">
+                <h5 class="pull-left"><span class="label label-success" style="font-size:1.45em;">{{ad.price}} Грн</span></h5>
+                <div class="btn-group pull-right" role="group">
+                    <div class="btn-group" role="group">
+                        <a ng-if="user && user._id==ad.author" ui-sref="app.adEdit({id:ad._id})" class="btn btn-info">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        </a>
+                        <button ng-if="user && !isSubscription(ad._id) && user._id != ad.author" class="btn btn-info" ng-click="subscribe(ad)">
+                            <span class="glyphicon glyphicon-star-empty"></span>
+                        </button>
+                        <button ng-if="user && isSubscription(ad._id)" class="btn btn-info" ng-click="unsubscribe(ad._id)">
+                            <span class="glyphicon glyphicon-star"></span>
+                        </button>
+                        <button ng-if="user && user._id==ad.author" class="btn btn-danger" ng-click="deleteAd(ad._id)">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

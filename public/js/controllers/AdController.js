@@ -56,6 +56,8 @@ angular.module('courseApp')
 
         function init() {
             var findText = $state.params.find;
+            $scope.listMyAds = [];
+            $scope.observeAds = [];
 
             if(findText) {
                 AdFactory.findAds(findText).then(function(response) {

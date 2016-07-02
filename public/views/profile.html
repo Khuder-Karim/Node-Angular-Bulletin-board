@@ -4,27 +4,30 @@
         <h4 class="col-xs-12">Ваши обьявления:</h4>
 
         <div class="product col-xs-12 col-sm-4" ng-repeat="ad in listMyAds">
-            <a ui-sref="app.adDetails({id:ad._id})">
-                <img ng-if="ad.img" ng-src="{{ad.img}}" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px; max-height: 65%;">
-                <img ng-if="!ad.img" ng-src="../images/no_photo.jpg" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
+            <a ui-sref="app.adDetails({id:ad._id})" ui-sref-opts="{inherit: false}" class="image">
+                <img ng-if="ad.img" ng-src="{{ad.img}}" alt="{{ad.title}}" class="img-responsive center-block">
+                <img ng-if="!ad.img" ng-src="../images/no_photo.jpg" alt="{{ad.title}}" class="img-responsive center-block">
             </a>
-            <a ui-sref="app.adDetails({id:ad._id})">
-                <h4>{{ad.title}}</h4>
-            </a>
-            <span>{{ad.created | date: 'longDate'}}</span>
+            <h4 class="description">
+                <a ui-sref="app.adDetails({id:ad._id})">
+                    {{ad.title | limitTo: 120}}{{ad.title.length > 120 ? '...' : ''}}<br>
+                    <small class="date">{{ad.created | date: 'longDate'}}</small>
+                </a>
+            </h4>
 
-            <div class="row manipuleAd">
-                <h3 class="col-xs-6">
-                    <strong class="label label-success">{{ad.price}} Грн</strong>
-                </h3>
-                <h3 class="col-xs-6" style="text-align: right">
-                    <button class="btn btn-danger" ng-click="deleteAd(ad._id)">
-                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                    </button>
-                    <a ui-sref="app.adEdit({id:ad._id})" class="btn btn-info">
-                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                    </a>
-                </h3>
+            <div class="footer clearfix">
+                <h5 class="pull-left"><span class="label label-success" style="font-size:1.45em;">{{ad.price}} Грн</span></h5>
+                <div class="btn-group pull-right" role="group">
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-danger" ng-click="deleteAd(ad._id)">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
+                        <a ui-sref="app.adEdit({id:ad._id})" class="btn btn-info">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -33,36 +36,34 @@
         <h4 class="col-xs-12">Избранные: </h4>
 
         <div class="product col-xs-12 col-sm-4" ng-repeat="ad in observeAds">
-            <a ui-sref="app.adDetails({id:ad._id})">
-                <img ng-if="ad.img" ng-src="{{ad.img}}" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
-                <img ng-if="!ad.img" ng-src="../images/no_photo.jpg" alt="{{ad.title}}" style="max-width: 100%; padding-top: 15px;">
+            <a ui-sref="app.adDetails({id:ad._id})" ui-sref-opts="{inherit: false}" class="image">
+                <img ng-if="ad.img" ng-src="{{ad.img}}" alt="{{ad.title}}" class="img-responsive center-block">
+                <img ng-if="!ad.img" ng-src="../images/no_photo.jpg" alt="{{ad.title}}" class="img-responsive center-block">
             </a>
-            <a ui-sref="app.adDetails({id:ad._id})">
-                <h4>{{ad.title}}</h4>
-            </a>
-            <span>{{ad.created | date: 'longDate'}}</span>
+            <h4 class="description">
+                <a ui-sref="app.adDetails({id:ad._id})">
+                    {{ad.title | limitTo: 120}}{{ad.title.length > 120 ? '...' : ''}}<br>
+                    <small class="date">{{ad.created | date: 'longDate'}}</small>
+                </a>
+            </h4>
 
-            <div class="row manipuleAd">
-                <h3 class="col-xs-6">
-                    <strong class="label label-success">{{ad.price}} Грн</strong>
-                </h3>
-                <h3 class="col-xs-6" style="text-align: right">
-                    <button class="btn btn-info" ng-click="unsubscribe(ad._id)">
-                        <span class="glyphicon glyphicon-star"></span>
-                    </button>
-                </h3>
+            <div class="footer clearfix">
+                <h5 class="pull-left"><span class="label label-success" style="font-size:1.45em;">{{ad.price}} Грн</span></h5>
+                <button class="btn btn-info pull-right" ng-click="unsubscribe(ad._id)">
+                    <span class="glyphicon glyphicon-star"></span>
+                </button>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12">
-            <h3 ng-if="!listMyAds.length">Ваших обьявлений пока нет</h3>
-        </div>
+        <h4 class="col-xs-12" ng-if="!listMyAds.length">
+            Ваших обьявлений пока нет
+        </h4>
     </div>
     <div class="row">
-        <div class="col-xs-12">
-            <h3 ng-if="!observeAds.length">Избранных обьявлений пока нет</h3>
-        </div>
+        <h4 class="col-xs-12" ng-if="!observeAds.length">
+            Избранных обьявлений пока нет
+        </h4>
     </div>
 
 </div>
